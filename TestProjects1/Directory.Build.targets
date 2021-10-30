@@ -1,0 +1,17 @@
+<Project>
+    <Target Name="ValidateReferences" BeforeTargets="BeforeBuild" Inputs="@(ProjectReference)" Outputs="%(Identity).Dummy">
+        <PropertyGroup>
+            <_ProjectReferenceFullPath>%(ProjectReference.FullPath)</_ProjectReferenceFullPath>
+        </PropertyGroup>
+        <ItemGroup>
+            <_AllowedReferenceBasePath Include="%(AllowedReferenceBasePath.Identity)">
+                <PathInsideOfBase>$(_ProjectReferenceFullPath.StartsWith('%(AllowedReferenceBasePath.FullPath)'))</PathInsideOfBase>
+            </_AllowedReferenceBasePath>
+        </ItemGroup>
+        <PropertyGroup>
+            <_ShowError>!@(_AllowedReferenceBasePath->AnyHaveMetadataValue('PathInsideOfBase', 'True'))</_ShowError>
+            <_ErrorText>Project reference '%(ProjectReference.Identity)' is outside of allowed reference base paths (@(_AllowedReferenceBasePath->'%(FullPath)', ', '))</_ErrorText>
+        </PropertyGroup>
+        <Error Code="REFVAL001" Text="$(_ErrorText)" Condition="$(_ShowError)" />
+    </Target>
+</Project>

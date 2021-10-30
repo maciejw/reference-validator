@@ -1,0 +1,5 @@
+<Project>
+    <ItemGroup>
+        <AllowedReferenceBasePath Include="$(MSBuildProjectDirectory)\\..\\" />
+    </ItemGroup>
+</Project>
